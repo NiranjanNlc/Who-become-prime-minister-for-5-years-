@@ -132,6 +132,33 @@ export const CONCEPTS: Record<string, Concept> = {
     definitionNe: 'जब देशले निर्यात भन्दा बढी वस्तु तथा सेवा आयात गर्छ।',
     nepalContext: 'Nepal relies heavily on imports for basic goods and fuel, leading to a massive trade deficit primarily with India.',
     nepalContextNe: 'नेपाल आधारभूत वस्तु र इन्धनका लागि आयातमा अत्यधिक निर्भर छ, जसले गर्दा विशेष गरी भारतसँग ठूलो व्यापार घाटा छ।'
+  },
+  'public_health': {
+    id: 'public_health',
+    title: 'Public Health',
+    titleNe: 'जनस्वास्थ्य',
+    definition: 'The science of protecting and improving the health of people and their communities.',
+    definitionNe: 'मानिस र समुदायको स्वास्थ्य रक्षा र सुधार गर्ने विज्ञान।',
+    nepalContext: 'Infectious diseases like Dengue are becoming more common in urban areas due to unplanned urbanization.',
+    nepalContextNe: 'अव्यवस्थित सहरीकरणका कारण डेङ्गु जस्ता संक्रामक रोगहरू सहरी क्षेत्रमा सामान्य बन्दै गएका छन्।'
+  },
+  'foreign_policy': {
+    id: 'foreign_policy',
+    title: 'Diplomatic Protocol',
+    titleNe: 'कूटनीतिक मर्यादा',
+    definition: 'The official procedure or system of rules governing affairs of state or diplomatic occasions.',
+    definitionNe: 'राज्य वा कूटनीतिक मामिलाहरू सञ्चालन गर्ने आधिकारिक प्रक्रिया वा नियमहरू।',
+    nepalContext: 'Balancing relations between neighbors often requires strict adherence to protocol to avoid misunderstandings.',
+    nepalContextNe: 'छिमेकीहरूसँगको सम्बन्ध सन्तुलनमा राख्न गलतफहमी नहोस् भनेर प्रोटोकलको कडा पालना आवश्यक हुन्छ।'
+  },
+  'labor_rights': {
+    id: 'labor_rights',
+    title: 'Labor Rights',
+    titleNe: 'श्रम अधिकार',
+    definition: 'Legal rights and human rights relating to labor relations between workers and employers.',
+    definitionNe: 'कामदार र रोजगारदाता बीचको सम्बन्धसँग सम्बन्धित कानुनी अधिकार र मानव अधिकार।',
+    nepalContext: 'Strikes in the transport sector often paralyze the country, highlighting the power of unions vs public need.',
+    nepalContextNe: 'यातायात क्षेत्रका बन्द हडतालले अक्सर देश ठप्प पार्छन्, जसले युनियनको शक्ति र जनताको आवश्यकता बीचको द्वन्द्व देखाउँछ।'
   }
 };
 
@@ -798,6 +825,119 @@ export const EVENTS: GameEvent[] = [
           factions: { business: 10, activists: -20 },
         }
       }
+    ]
+  },
+  // --- Additional Events (Turns 10-30) ---
+  {
+    id: 'evt_health_outbreak',
+    title: 'Disease Outbreak',
+    titleNe: 'रोग महामारी',
+    description: 'A contagious disease spreads in urban centers.',
+    descriptionNe: 'सार्वजनिक सहरहरूमा संक्रामक रोग फैलिरहेको छ।',
+    conceptTag: 'public_health',
+    icon: '🦠',
+    category: 'Health',
+    minTurn: 12,
+    maxTurn: 28,
+    choices: [
+      {
+        id: 'health_quarantine',
+        label: 'Enforce Quarantine',
+        labelNe: 'क्वारेन्टिन लागू गर्नुहोस्',
+        summary: 'Quarantine measures taken.',
+        effect: { meters: { trust: 5, economy: -10 }, factions: { bureaucrats: 10 } }
+      },
+      {
+        id: 'health_ignore',
+        label: 'Minimal Intervention',
+        labelNe: 'सामान्य हस्तक्षेप',
+        summary: 'Minimal health measures applied.',
+        effect: { meters: { trust: -15, economy: 5 } }
+      }
+    ]
+  },
+  {
+    id: 'evt_mining_conflict',
+    title: 'Illegal Mining Scandal',
+    titleNe: 'अवैध खानी काण्ड',
+    description: 'Reports of illegal mining activities surface, angering citizens.',
+    descriptionNe: 'अवैध खानी गतिविधिको रिपोर्ट आएको छ, जसले नागरिकलाई क्रोधित बनाउँछ।',
+    conceptTag: 'corruption',
+    icon: '⛏️',
+    category: 'Corruption',
+    minTurn: 15,
+    maxTurn: 30,
+    choices: [
+      {
+        id: 'mining_crackdown',
+        label: 'Crackdown',
+        labelNe: 'कडा कारबाही',
+        summary: 'Illegal mining suppressed.',
+        effect: { meters: { trust: 10, economy: -5 }, factions: { activists: 10 } }
+      },
+      {
+        id: 'mining_ignore',
+        label: 'Ignore Scandal',
+        labelNe: 'काण्ड बेवास्ता गर्नुहोस्',
+        summary: 'Ignored mining scandal.',
+        effect: { meters: { trust: -10 }, factions: { activists: -15 } }
+      }
+    ]
+  },
+  {
+    id: 'evt_foreign_visit',
+    title: 'State Visit',
+    titleNe: 'राजकीय भ्रमण',
+    description: 'A neighboring country requests a formal visit to strengthen ties.',
+    descriptionNe: 'छिमेकी देशले सम्बन्ध सुदृढ गर्न औपचारिक भ्रमणको अनुरोध गरेको छ।',
+    conceptTag: 'foreign_policy',
+    icon: '🤝',
+    category: 'Diplomacy',
+    minTurn: 14,
+    maxTurn: 30,
+    choices: [
+      {
+        id: 'visit_accept',
+        label: 'Accept Visit',
+        labelNe: 'भ्रमण स्वीकार गर्नुहोस्',
+        summary: 'Diplomatic visit accepted.',
+        effect: { meters: { trust: 10, economy: 5 }, factions: { bureaucrats: 10 } }
+      },
+      {
+        id: 'visit_decline',
+        label: 'Decline Visit',
+        labelNe: 'भ्रमण अस्वीकार गर्नुहोस्',
+        summary: 'Diplomatic visit declined.',
+        effect: { meters: { trust: -5 }, factions: { bureaucrats: -10 } }
+      }
+    ]
+  },
+  {
+    id: 'evt_transport_strike',
+    title: 'Transport Strike',
+    titleNe: 'सवारी आन्दोलन',
+    description: 'Truckers strike demanding fuel subsidy reforms.',
+    descriptionNe: 'ट्रकर चालकहरूले इन्धन अनुदान सुधारको माग गर्दै आन्दोलन गर्छन्।',
+    conceptTag: 'labor_rights',
+    icon: '🚛',
+    category: 'Economy',
+    minTurn: 5,
+    maxTurn: 30,
+    choices: [
+        {
+            id: 'strike_concede',
+            label: 'Grant Subsidy',
+            labelNe: 'अनुदान दिनुहोस्',
+            summary: 'Granted subsidies to end strike.',
+            effect: { meters: { economy: -10, trust: 5 }, factions: { business: 10 } }
+        },
+        {
+            id: 'strike_resist',
+            label: 'Resist Demands',
+            labelNe: 'माग अस्वीकार गर्नुहोस्',
+            summary: 'Resisted union demands.',
+            effect: { meters: { economy: 5, trust: -10 }, factions: { business: -10, activists: 5 } }
+        }
     ]
   }
 ];

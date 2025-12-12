@@ -42,7 +42,11 @@ export const TRANSLATIONS = {
     bureaucrats: 'Bureaucracy',
     activists: 'Civil Society',
     approval: 'Approval',
-    tapForDetails: 'Tap for details'
+    tapForDetails: 'Tap for details',
+    welcomeTitle: 'Reigns of Nepal',
+    welcomeSubtitle: 'Can you survive 5 years as Prime Minister?',
+    enterBaluwatar: 'Enter Baluwatar',
+    howToPlay: 'Make tough choices. Balance the power.'
   },
   ne: {
     trust: 'विश्वास',
@@ -87,6 +91,10 @@ export const TRANSLATIONS = {
     bureaucrats: 'कर्मचारीतन्त्र',
     activists: 'नागरिक समाज',
     approval: 'समर्थन',
-    tapForDetails: 'विस्तृत विवरण हेर्नुहोस्'
+    tapForDetails: 'विस्तृत विवरण हेर्नुहोस्',
+    welcomeTitle: 'नेपालको शासन',
+    welcomeSubtitle: 'के तपाईं प्रधानमन्त्रीको ५ वर्षे कार्यकाल पूरा गर्न सक्नुहुन्छ?',
+    enterBaluwatar: 'बालुवाटार प्रवेश',
+    howToPlay: 'कठिन निर्णय लिनुहोस्। सत्ता सन्तुलन गर्नुहोस्।'
   }
 };

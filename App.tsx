@@ -10,6 +10,7 @@ import PhaseTransition from './components/PhaseTransition';
 import ProgressBar from './components/ProgressBar';
 import SettingsModal from './components/SettingsModal';
 import StatusModal from './components/StatusModal';
+import WelcomeScreen from './components/WelcomeScreen';
 import { Info, Settings } from 'lucide-react';
 
 // Total turns: 30
@@ -21,7 +22,8 @@ const PHASE_2_START = 11;
 const PHASE_3_START = 21;
 
 const App: React.FC = () => {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>('ne');
+  const [gameStarted, setGameStarted] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showStatus, setShowStatus] = useState(false);
   const t = TRANSLATIONS[language];
@@ -58,6 +60,8 @@ const App: React.FC = () => {
 
   // Initialize game
   useEffect(() => {
+    // Only initialize the game logic when the component mounts, 
+    // but we don't show it until gameStarted is true.
     startNewGame();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -89,15 +93,11 @@ const App: React.FC = () => {
       if (forced) return forced;
     }
 
-    // 2. Filter eligible events based on Turn Range (Phases)
-    const eligible = EVENTS.filter(e => {
+    // 2. Get all valid events for this turn based on Phase (min/max turn) and Flags
+    const validEvents = EVENTS.filter(e => {
       // Phase Check
       if (e.minTurn && turn < e.minTurn) return false;
       if (e.maxTurn && turn > e.maxTurn) return false;
-
-      // Don't repeat recent events (last 5)
-      const recent = history.slice(-5);
-      if (recent.includes(e.id)) return false;
 
       // Check flags
       if (e.requiredFlags && !e.requiredFlags.every(f => flags[f])) return false;
@@ -106,16 +106,38 @@ const App: React.FC = () => {
       return true;
     });
 
-    // 3. Random selection
-    if (eligible.length === 0) {
-      // Fallback: pick random event regardless of phase constraints if pool is exhausted
-      const emergencyPool = EVENTS.filter(e => !history.slice(-2).includes(e.id));
-      const r = Math.floor(Math.random() * emergencyPool.length);
-      return emergencyPool[r];
+    // Safety fallback: if no valid events for this turn (unlikely), pick any flag-compatible event
+    if (validEvents.length === 0) {
+       const emergencyPool = EVENTS.filter(e => {
+          if (e.requiredFlags && !e.requiredFlags.every(f => flags[f])) return false;
+          if (e.forbiddenFlags && e.forbiddenFlags.some(f => flags[f])) return false;
+          return true;
+       });
+       // Pick a random one, preferably one not recently played if possible
+       const playable = emergencyPool.filter(e => !history.slice(-2).includes(e.id));
+       const pool = playable.length > 0 ? playable : emergencyPool;
+       return pool[Math.floor(Math.random() * pool.length)];
     }
-    
-    const randomIndex = Math.floor(Math.random() * eligible.length);
-    return eligible[randomIndex];
+
+    // 3. Priority: Unseen events
+    const unseenEvents = validEvents.filter(e => !history.includes(e.id));
+    if (unseenEvents.length > 0) {
+      const r = Math.floor(Math.random() * unseenEvents.length);
+      return unseenEvents[r];
+    }
+
+    // 4. Fallback: Events seen least recently
+    // Sort validEvents by their last index in history (ascending -> oldest first)
+    const sortedByRecency = [...validEvents].sort((a, b) => {
+      const lastA = history.lastIndexOf(a.id);
+      const lastB = history.lastIndexOf(b.id);
+      return lastA - lastB;
+    });
+
+    // Pick from top 2 least recent to add variety but avoid immediate repetition
+    const poolSize = Math.min(2, sortedByRecency.length);
+    const candidates = sortedByRecency.slice(0, poolSize);
+    return candidates[Math.floor(Math.random() * candidates.length)];
   };
 
   const getCurrentPhaseTitle = (turn: number) => {
@@ -251,6 +273,10 @@ const App: React.FC = () => {
 
     }, 800); // Animation delay
   }, [gameState, animating, transitioning.show, language, t]);
+
+  if (!gameStarted) {
+    return <WelcomeScreen language={language} setLanguage={setLanguage} onStart={() => setGameStarted(true)} />;
+  }
 
   if (!currentEvent) return <div className="h-screen flex items-center justify-center font-sans">{t.loading}</div>;
 

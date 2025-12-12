@@ -1,3 +1,4 @@
+
 export type MeterType = 'trust' | 'economy' | 'liberty' | 'environment';
 
 export type FactionType = 'youth' | 'business' | 'bureaucrats' | 'activists';
@@ -60,7 +61,7 @@ export interface GameEvent {
   maxTurn?: number;
   requiredFlags?: string[];
   forbiddenFlags?: string[];
-  category: 'Corruption' | 'Rights' | 'Economy' | 'Environmental' | 'Party';
+  category: 'Corruption' | 'Rights' | 'Economy' | 'Environmental' | 'Party' | 'Health' | 'Diplomacy';
   choices: Choice[];
 }
 
