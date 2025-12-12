@@ -6,9 +6,10 @@ import { TRANSLATIONS } from '../locales';
 interface MeterBarProps {
   meters: Meters;
   language: Language;
+  onOpenStatus?: () => void;
 }
 
-const MeterBar: React.FC<MeterBarProps> = ({ meters, language }) => {
+const MeterBar: React.FC<MeterBarProps> = ({ meters, language, onOpenStatus }) => {
   const t = TRANSLATIONS[language];
   const isNepali = language === 'ne';
 
@@ -42,11 +43,19 @@ const MeterBar: React.FC<MeterBarProps> = ({ meters, language }) => {
   );
 
   return (
-    <div className="flex justify-between items-end px-4 py-2 bg-white shadow-sm border-b border-gray-200 w-full max-w-lg mx-auto">
+    <div 
+        onClick={onOpenStatus}
+        className="relative flex justify-between items-end px-4 py-2 bg-white shadow-sm border-b border-gray-200 w-full max-w-lg mx-auto cursor-pointer group hover:bg-gray-50 transition-colors"
+    >
       {renderMeter(<Shield size={20} />, meters.trust, t.trust)}
       {renderMeter(<Coins size={20} />, meters.economy, t.economy)}
       {renderMeter(<Scale size={20} />, meters.liberty, t.liberty)}
       {renderMeter(<Leaf size={20} />, meters.environment, t.environment)}
+      
+      {/* Hint Tooltip */}
+      <div className="absolute top-full left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] py-1 px-2 rounded mt-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">
+        {t.tapForDetails}
+      </div>
     </div>
   );
 };

@@ -34,7 +34,15 @@ export const TRANSLATIONS = {
     phase2: 'Mid-Term Governance',
     phase3: 'Final Tenure',
     victory: 'Victory',
-    defeat: 'Defeat'
+    defeat: 'Defeat',
+    statusReport: 'Status Report',
+    factions: 'Factions',
+    youth: 'Youth',
+    business: 'Business',
+    bureaucrats: 'Bureaucracy',
+    activists: 'Civil Society',
+    approval: 'Approval',
+    tapForDetails: 'Tap for details'
   },
   ne: {
     trust: 'विश्वास',
@@ -71,6 +79,14 @@ export const TRANSLATIONS = {
     phase2: 'मध्यावधि शासन',
     phase3: 'अन्तिम कार्यकाल',
     victory: 'जित',
-    defeat: 'हार'
+    defeat: 'हार',
+    statusReport: 'स्थिति विवरण',
+    factions: 'शक्ति केन्द्रहरू',
+    youth: 'युवा वर्ग',
+    business: 'निजी क्षेत्र',
+    bureaucrats: 'कर्मचारीतन्त्र',
+    activists: 'नागरिक समाज',
+    approval: 'समर्थन',
+    tapForDetails: 'विस्तृत विवरण हेर्नुहोस्'
   }
 };

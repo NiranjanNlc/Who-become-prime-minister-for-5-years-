@@ -9,6 +9,7 @@ import EndScreen from './components/EndScreen';
 import PhaseTransition from './components/PhaseTransition';
 import ProgressBar from './components/ProgressBar';
 import SettingsModal from './components/SettingsModal';
+import StatusModal from './components/StatusModal';
 import { Info, Settings } from 'lucide-react';
 
 // Total turns: 30
@@ -22,6 +23,7 @@ const PHASE_3_START = 21;
 const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>('en');
   const [showSettings, setShowSettings] = useState(false);
+  const [showStatus, setShowStatus] = useState(false);
   const t = TRANSLATIONS[language];
 
   const [gameState, setGameState] = useState<GameState>({
@@ -63,6 +65,7 @@ const App: React.FC = () => {
   const startNewGame = () => {
     setTransitioning({ show: false, phaseTitle: '', nextPhaseTitle: '', narrative: '' });
     setShowEducation(false);
+    setShowStatus(false);
     const firstEvent = selectNextEvent([], {}, 1);
     setGameState({
       turn: 1,
@@ -255,7 +258,11 @@ const App: React.FC = () => {
     <div className={`h-screen w-full bg-gray-100 flex flex-col font-sans ${language === 'ne' ? 'font-nepali' : ''}`}>
       
       {/* Top Bar */}
-      <MeterBar meters={gameState.meters} language={language} />
+      <MeterBar 
+        meters={gameState.meters} 
+        language={language} 
+        onOpenStatus={() => setShowStatus(true)}
+      />
 
       {/* Main Content Area */}
       <div className="flex-grow relative overflow-hidden flex flex-col">
@@ -336,6 +343,14 @@ const App: React.FC = () => {
         onClose={() => setShowSettings(false)} 
         language={language}
         setLanguage={setLanguage}
+      />
+
+      {/* Status Modal (Factions) */}
+      <StatusModal
+        isOpen={showStatus}
+        onClose={() => setShowStatus(false)}
+        factions={gameState.factions}
+        language={language}
       />
     </div>
   );
